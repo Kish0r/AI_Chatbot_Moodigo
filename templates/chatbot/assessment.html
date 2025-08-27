@@ -1,0 +1,422 @@
+<!-- templates/chatbot/assessment.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}Mental Health Assessment - Moodigo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .assessment-card {
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    
+    .question-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .question-card:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+    }
+    
+    .question-number {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .response-option {
+        padding: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+    
+    .response-option:hover {
+        border-color: var(--primary-color);
+        background: rgba(102, 126, 234, 0.05);
+    }
+    
+    .response-option.selected {
+        border-color: var(--primary-color);
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+    
+    .disclaimer {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.1));
+        border: 1px solid #93c5fd;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .floating-submit {
+        position: sticky;
+        bottom: 20px;
+        z-index: 1000;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        padding: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .question-card {
+            padding: 1rem;
+        }
+        
+        .response-option {
+            padding: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="bi bi-clipboard-check text-primary me-2"></i>
+                    Mental Health Assessment
+                </h1>
+                <p class="lead text-muted">Help us understand your current mental well-being</p>
+            </div>
+            
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-info-circle text-primary me-3 mt-1" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <h5 class="text-primary fw-bold mb-2">Important Notice</h5>
+                        <p class="mb-2">
+                            This assessment is designed to help you understand your current mental health status. 
+                            It is <strong>not a substitute for professional medical advice</strong>, diagnosis, or treatment.
+                        </p>
+                        <ul class="mb-0 text-muted">
+                            <li>Answer honestly for the most accurate results</li>
+                            <li>This assessment takes about 5-10 minutes to complete</li>
+                            <li>Your responses are private and secure</li>
+                            <li>If you're in crisis, please seek immediate help</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assessment Form -->
+            <form method="post" id="assessmentForm">
+                {% csrf_token %}
+                
+                <!-- Progress Bar -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold">Progress</span>
+                        <span id="progressText">0 / {{ questions|length }}</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" id="progressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Questions -->
+                {% for question_num, question in questions %}
+                <div class="question-card" data-question="{{ question_num }}">
+                    <div class="question-number">{{ question_num|add:1 }}</div>
+                    <h5 class="mb-4">{{ question }}</h5>
+                    
+                    <div class="response-options">
+                        {% for value, label in response_options %}
+                        <div class="response-option" data-value="{{ value }}" data-question="{{ question_num }}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question_num }}" 
+                                       value="{{ value }}" 
+                                       id="q{{ question_num }}_{{ value }}">
+                                <label class="form-check-label ms-3 flex-grow-1" 
+                                       for="q{{ question_num }}_{{ value }}">
+                                    <strong>{{ label }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        {% if value == 0 %}Not experienced at all
+                                        {% elif value == 1 %}Rarely experienced
+                                        {% elif value == 2 %}Sometimes experienced
+                                        {% elif value == 3 %}Frequently experienced
+                                        {% elif value == 4 %}Almost always experienced
+                                        {% endif %}
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Submit Section -->
+                <div class="floating-submit">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">
+                                <i class="bi bi-shield-check me-1"></i>
+                                Your responses are confidential
+                            </small>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
+                            <i class="bi bi-check-circle me-2"></i>
+                            Complete Assessment
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Crisis Help Card -->
+            <div class="card border-danger mt-4">
+                <div class="card-body text-center">
+                    <h5 class="text-danger mb-3">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Need Immediate Help?
+                    </h5>
+                    <p class="mb-3">If you're having thoughts of self-harm or are in crisis, please reach out now.</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <a href="{% url 'crisis_help' %}" class="btn btn-danger">
+                            <i class="bi bi-telephone-fill me-1"></i>
+                            Crisis Resources
+                        </a>
+                        <a href="tel:988" class="btn btn-outline-danger">
+                            <i class="bi bi-telephone me-1"></i>
+                            Call 988
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const form = document.getElementById('assessmentForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const totalQuestions = {{ questions|length }};
+    let answeredQuestions = new Set();
+    
+    // Handle response option clicks
+    document.querySelectorAll('.response-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const questionNum = this.dataset.question;
+            const value = this.dataset.value;
+            
+            // Remove selected class from all options for this question
+            document.querySelectorAll(`.response-option[data-question="${questionNum}"]`)
+                .forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            this.classList.add('selected');
+            
+            // Check the radio button
+            const radioButton = this.querySelector('input[type="radio"]');
+            radioButton.checked = true;
+            
+            // Add to answered questions set
+            answeredQuestions.add(questionNum);
+            
+            // Update progress
+            updateProgress();
+            
+            // Smooth scroll to next question (if not last)
+            if (parseInt(questionNum) < totalQuestions - 1) {
+                setTimeout(() => {
+                    const nextQuestion = document.querySelector(`[data-question="${parseInt(questionNum) + 1}"]`);
+                    if (nextQuestion) {
+                        nextQuestion.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                }, 300);
+            } else {
+                // Scroll to submit button
+                setTimeout(() => {
+                    submitBtn.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 300);
+            }
+        });
+    });
+    
+    // Update progress bar and submit button
+    function updateProgress() {
+        const answered = answeredQuestions.size;
+        const percentage = (answered / totalQuestions) * 100;
+        
+        progressBar.style.width = `${percentage}%`;
+        progressText.textContent = `${answered} / ${totalQuestions}`;
+        
+        // Enable submit button if all questions answered
+        if (answered === totalQuestions) {
+            submitBtn.disabled = false;
+            submitBtn.classList.add('pulse');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.remove('pulse');
+        }
+    }
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        // Validate all questions are answered
+        if (answeredQuestions.size !== totalQuestions) {
+            e.preventDefault();
+            showToast('Please answer all questions before submitting.', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing Assessment...';
+        submitBtn.disabled = true;
+        
+        // Add loading overlay
+        const overlay = document.createElement('div');
+        overlay.innerHTML = `
+            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 200px;">
+                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;"></div>
+                <h4>Analyzing Your Responses...</h4>
+                <p class="text-muted">This may take a moment</p>
+            </div>
+        `;
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+        
+        document.body.appendChild(overlay);
+    });
+    
+    // Add pulse animation class
+    const style = document.createElement('style');
+    style.textContent = `
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Auto-save functionality (optional)
+    function autoSave() {
+        const responses = {};
+        document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+            responses[input.name] = input.value;
+        });
+        
+        // Save to localStorage for recovery
+        localStorage.setItem('assessment_responses', JSON.stringify(responses));
+    }
+    
+    // Load auto-saved responses
+    function loadAutoSaved() {
+        const saved = localStorage.getItem('assessment_responses');
+        if (saved) {
+            const responses = JSON.parse(saved);
+            Object.keys(responses).forEach(name => {
+                const input = document.querySelector(`input[name="${name}"][value="${responses[name]}"]`);
+                if (input) {
+                    input.checked = true;
+                    const option = input.closest('.response-option');
+                    option.classList.add('selected');
+                    answeredQuestions.add(name.split('_')[1]);
+                }
+            });
+            updateProgress();
+        }
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        loadAutoSaved();
+        
+        // Auto-save every 30 seconds
+        setInterval(autoSave, 30000);
+        
+        // Save on each answer
+        document.addEventListener('change', autoSave);
+    });
+    
+    // Clear auto-save on successful submission
+    form.addEventListener('submit', function() {
+        setTimeout(() => {
+            localStorage.removeItem('assessment_responses');
+        }, 1000);
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key >= '0' && e.key <= '4') {
+            const currentQuestion = document.querySelector('.question-card:hover');
+            if (currentQuestion) {
+                const questionNum = currentQuestion.dataset.question;
+                const option = document.querySelector(`.response-option[data-question="${questionNum}"][data-value="${e.key}"]`);
+                if (option) {
+                    option.click();
+                }
+            }
+        }
+    });
+    
+    // Smooth scroll for keyboard users
+    document.querySelectorAll('.question-card').forEach(card => {
+        card.addEventListener('focus', function() {
+            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    });
+</script>
+{% endblock %}

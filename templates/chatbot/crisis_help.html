@@ -1,0 +1,569 @@
+<!-- templates/chatbot/crisis_help.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}Crisis Help - Immediate Support - Moodigo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .crisis-hero {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: white;
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .emergency-card {
+        background: linear-gradient(135deg, #fef2f2, #fee2e2);
+        border: 2px solid #fca5a5;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        animation: pulseRed 2s infinite;
+    }
+    
+    @keyframes pulseRed {
+        0%, 100% { border-color: #fca5a5; }
+        50% { border-color: #ef4444; }
+    }
+    
+    .crisis-resource-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+        border-left: 4px solid #dc2626;
+    }
+    
+    .crisis-resource-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(220, 38, 38, 0.2);
+        border-left-width: 6px;
+    }
+    
+    .hotline-button {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        border: none;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+    }
+    
+    .hotline-button:hover {
+        background: linear-gradient(135deg, #b91c1c, #dc2626);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+    }
+    
+    .warning-icon {
+        font-size: 3rem;
+        color: #dc2626;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+    
+    .chat-button {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .chat-button:hover {
+        background: linear-gradient(135deg, #047857, #065f46);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    }
+    
+    .steps-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #10b981;
+    }
+    
+    .warning-signs {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+        border: 1px solid #f59e0b;
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .support-chat {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+        border: 1px solid #10b981;
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 2rem 0;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Crisis Hero Section -->
+    <div class="crisis-hero">
+        <div class="warning-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <h1 class="display-4 fw-bold mb-3">Crisis Support</h1>
+        <p class="lead mb-4">
+            If you or someone you know is in immediate danger or having thoughts of self-harm, 
+            please reach out for help <strong>RIGHT NOW</strong>. You are not alone.
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="tel:988" class="hotline-button">
+                <i class="bi bi-telephone-fill"></i>
+                Call 988 - Suicide & Crisis Lifeline
+            </a>
+            <a href="tel:911" class="hotline-button">
+                <i class="bi bi-telephone"></i>
+                Call 911 - Emergency Services
+            </a>
+        </div>
+    </div>
+    
+    <!-- Emergency Resources -->
+    <div class="emergency-card">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <i class="bi bi-telephone-fill text-danger" style="font-size: 3rem;"></i>
+            </div>
+            <div class="col-md-8">
+                <h3 class="text-danger fw-bold mb-2">Immediate Help Available 24/7</h3>
+                <p class="mb-2">
+                    These resources are staffed by trained crisis counselors who can provide immediate support, 
+                    safety planning, and connection to local resources.
+                </p>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="text-danger fw-bold" style="font-size: 1.2rem;">FREE</div>
+                <small class="text-muted">All services are free and confidential</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Crisis Hotlines -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="display-6 fw-bold text-center mb-4 text-danger">
+                <i class="bi bi-shield-exclamation me-2"></i>
+                Crisis Hotlines & Support
+            </h2>
+        </div>
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <!-- National Suicide Prevention Lifeline -->
+        <div class="col-lg-6">
+            <div class="crisis-resource-card card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-telephone-fill text-danger me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="fw-bold text-danger mb-1">988 Suicide & Crisis Lifeline</h4>
+                            <small class="text-muted">Available 24/7 nationwide</small>
+                        </div>
+                    </div>
+                    <p class="mb-3">
+                        Free and confidential emotional support for people in suicidal crisis or emotional distress. 
+                        Available 24 hours a day, 7 days a week, across the United States.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <a href="tel:988" class="btn btn-danger">
+                            <i class="bi bi-telephone me-1"></i> Call 988
+                        </a>
+                        <a href="https://988lifeline.org/chat/" target="_blank" class="btn btn-outline-danger">
+                            <i class="bi bi-chat-dots me-1"></i> Online Chat
+                        </a>
+                        <a href="sms:988" class="btn btn-outline-danger">
+                            <i class="bi bi-chat me-1"></i> Text 988
+                        </a>
+                    </div>
+                    <div class="small text-muted">
+                        <i class="bi bi-check-circle me-1"></i> Free • Confidential • Available 24/7
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Crisis Text Line -->
+        <div class="col-lg-6">
+            <div class="crisis-resource-card card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-chat-dots-fill text-danger me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="fw-bold text-danger mb-1">Crisis Text Line</h4>
+                            <small class="text-muted">Text-based crisis support</small>
+                        </div>
+                    </div>
+                    <p class="mb-3">
+                        Free crisis counseling via text message. Trained volunteers provide support for 
+                        anyone in crisis, connecting them with resources and helping them stay safe.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <a href="sms:741741?body=HOME" class="btn btn-danger">
+                            <i class="bi bi-chat me-1"></i> Text HOME to 741741
+                        </a>
+                        <a href="https://www.crisistextline.org/" target="_blank" class="btn btn-outline-danger">
+                            <i class="bi bi-globe me-1"></i> Learn More
+                        </a>
+                    </div>
+                    <div class="small text-muted">
+                        <i class="bi bi-check-circle me-1"></i> Free • Text-based • Available 24/7
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SAMHSA National Helpline -->
+        <div class="col-lg-6">
+            <div class="crisis-resource-card card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-info-circle-fill text-danger me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="fw-bold text-danger mb-1">SAMHSA National Helpline</h4>
+                            <small class="text-muted">Mental health & substance abuse support</small>
+                        </div>
+                    </div>
+                    <p class="mb-3">
+                        Free treatment referral and information service for individuals and families 
+                        facing mental health and/or substance use disorders.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <a href="tel:1-800-662-4357" class="btn btn-danger">
+                            <i class="bi bi-telephone me-1"></i> Call 1-800-662-HELP
+                        </a>
+                        <a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank" class="btn btn-outline-danger">
+                            <i class="bi bi-globe me-1"></i> Visit Website
+                        </a>
+                    </div>
+                    <div class="small text-muted">
+                        <i class="bi bi-check-circle me-1"></i> Free • Confidential • 24/7 Treatment Referrals
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trevor Project (LGBTQ+) -->
+        <div class="col-lg-6">
+            <div class="crisis-resource-card card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-heart-fill text-danger me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="fw-bold text-danger mb-1">The Trevor Project</h4>
+                            <small class="text-muted">LGBTQ+ crisis support</small>
+                        </div>
+                    </div>
+                    <p class="mb-3">
+                        Crisis intervention and suicide prevention services for LGBTQ+ young people 
+                        under 25. Available via phone, chat, and text.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <a href="tel:1-866-488-7386" class="btn btn-danger">
+                            <i class="bi bi-telephone me-1"></i> Call 1-866-488-7386
+                        </a>
+                        <a href="https://www.thetrevorproject.org/get-help/" target="_blank" class="btn btn-outline-danger">
+                            <i class="bi bi-chat-dots me-1"></i> Chat & Text
+                        </a>
+                    </div>
+                    <div class="small text-muted">
+                        <i class="bi bi-check-circle me-1"></i> LGBTQ+ Focused • Free • Confidential
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- If You're in Crisis Steps -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="display-6 fw-bold text-center mb-4">
+                <i class="bi bi-list-check me-2"></i>
+                If You're in Crisis - Take These Steps
+            </h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="steps-card">
+                <div class="d-flex align-items-start">
+                    <div class="bg-success rounded-circle p-2 me-3" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-white fw-bold">1</span>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-2">Call for Immediate Help</h5>
+                        <p class="mb-0">
+                            If you're having thoughts of suicide or self-harm, call 988 or 911 immediately. 
+                            Don't wait - help is available right now.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="steps-card">
+                <div class="d-flex align-items-start">
+                    <div class="bg-success rounded-circle p-2 me-3" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-white fw-bold">2</span>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-2">Reach Out to Someone</h5>
+                        <p class="mb-0">
+                            Contact a trusted friend, family member, counselor, or mentor. 
+                            You don't have to go through this alone.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="steps-card">
+                <div class="d-flex align-items-start">
+                    <div class="bg-success rounded-circle p-2 me-3" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-white fw-bold">3</span>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-2">Stay Safe</h5>
+                        <p class="mb-0">
+                            Remove any means of self-harm from your immediate environment. 
+                            Stay with someone or go to a safe place like an emergency room.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="steps-card">
+                <div class="d-flex align-items-start">
+                    <div class="bg-success rounded-circle p-2 me-3" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-white fw-bold">4</span>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-2">Follow Up</h5>
+                        <p class="mb-0">
+                            Connect with ongoing mental health support. Consider counseling, 
+                            therapy, or support groups for long-term wellness.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Warning Signs -->
+    <div class="warning-signs">
+        <h3 class="fw-bold text-warning mb-4">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Warning Signs to Watch For
+        </h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="fw-bold mb-3">Immediate Warning Signs:</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-dot text-warning"></i> Talking about wanting to die or kill oneself</li>
+                    <li><i class="bi bi-dot text-warning"></i> Looking for ways to kill oneself</li>
+                    <li><i class="bi bi-dot text-warning"></i> Talking about feeling hopeless or having no purpose</li>
+                    <li><i class="bi bi-dot text-warning"></i> Talking about feeling trapped or in unbearable pain</li>
+                    <li><i class="bi bi-dot text-warning"></i> Talking about being a burden to others</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5 class="fw-bold mb-3">Additional Warning Signs:</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-dot text-warning"></i> Increasing use of alcohol or drugs</li>
+                    <li><i class="bi bi-dot text-warning"></i> Acting anxious, agitated, or reckless</li>
+                    <li><i class="bi bi-dot text-warning"></i> Sleeping too little or too much</li>
+                    <li><i class="bi bi-dot text-warning"></i> Withdrawing or feeling isolated</li>
+                    <li><i class="bi bi-dot text-warning"></i> Showing rage or talking about seeking revenge</li>
+                </ul>
+            </div>
+        </div>
+        <div class="mt-3 p-3 bg-warning bg-opacity-10 rounded">
+            <p class="mb-0 fw-bold text-warning">
+                <i class="bi bi-info-circle me-2"></i>
+                If you notice these signs in yourself or someone else, take them seriously and seek help immediately.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Moodigo Support -->
+    <div class="support-chat">
+        <h3 class="fw-bold text-success mb-3">
+            <i class="bi bi-chat-heart me-2"></i>
+            Need Someone to Talk To?
+        </h3>
+        <p class="lead mb-4">
+            While Moodigo cannot replace professional crisis support, I'm here to listen 
+            and provide emotional support whenever you need it.
+        </p>
+        <a href="{% url 'chat' %}" class="chat-button">
+            <i class="bi bi-chat-dots"></i>
+            Chat with Moodigo Now
+        </a>
+    </div>
+    
+    <!-- Campus Resources -->
+    <div class="card border-0 mb-5">
+        <div class="card-body p-4">
+            <h3 class="fw-bold text-primary mb-4">
+                <i class="bi bi-building me-2"></i>
+                Campus & Local Resources
+            </h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3">University Resources:</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Campus Counseling Center</strong><br>
+                            <small class="text-muted">Most universities offer free counseling services</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Student Health Services</strong><br>
+                            <small class="text-muted">Medical and psychiatric support</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Dean of Students Office</strong><br>
+                            <small class="text-muted">Academic and personal support</small>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3">Local Emergency Services:</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Hospital Emergency Room</strong><br>
+                            <small class="text-muted">24/7 crisis mental health evaluation</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Mobile Crisis Units</strong><br>
+                            <small class="text-muted">On-site crisis intervention services</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Local Mental Health Centers</strong><br>
+                            <small class="text-muted">Community-based support services</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Final Reminders -->
+    <div class="card border-0 bg-light">
+        <div class="card-body text-center p-5">
+            <h2 class="fw-bold mb-4">Remember</h2>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <i class="bi bi-heart-fill text-danger" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3 fw-bold">You Matter</h5>
+                    <p class="text-muted">Your life has value and meaning</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <i class="bi bi-people-fill text-primary" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3 fw-bold">You're Not Alone</h5>
+                    <p class="text-muted">Help and support are always available</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <i class="bi bi-sunrise-fill text-warning" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3 fw-bold">Things Can Get Better</h5>
+                    <p class="text-muted">With support, healing and recovery are possible</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <p class="lead mb-4">
+                    Crisis is temporary, but suicide is permanent. Please reach out for help.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="tel:988" class="btn btn-danger btn-lg">
+                        <i class="bi bi-telephone-fill me-2"></i>
+                        Call 988 Now
+                    </a>
+                    <a href="{% url 'resources' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-life-preserver me-2"></i>
+                        Find More Resources
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Track crisis resource usage
+    document.querySelectorAll('a[href^="tel:"]').forEach(link => {
+        link.addEventListener('click', function() {
+            console.log('Crisis hotline accessed:', this.href);
+            // You can add analytics tracking here
+        });
+    });
+    
+    // Show support message after a delay
+    setTimeout(() => {
+        showToast('Remember: Help is available 24/7. You are not alone. 💙', 'info');
+    }, 3000);
+    
+    // Emergency contact quick access
+    document.addEventListener('keydown', function(e) {
+        // Ctrl + E for emergency contacts
+        if (e.ctrlKey && e.key === 'e') {
+            e.preventDefault();
+            window.location.href = 'tel:988';
+        }
+    });
+    
+    // Page visibility API to show support when user returns
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            // User returned to the page - show supportive message
+            setTimeout(() => {
+                showToast('Welcome back. How are you feeling? Consider chatting with Moodigo if you need support.', 'info');
+            }, 1000);
+        }
+    });
+</script>
+{% endblock %}

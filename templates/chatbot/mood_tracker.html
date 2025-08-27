@@ -1,0 +1,451 @@
+<!-- templates/chatbot/mood_tracker.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}Mood Tracker - Moodigo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mood-card {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        cursor: pointer;
+    }
+    
+    .mood-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+    }
+    
+    .mood-card.selected {
+        border-color: var(--primary-color);
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .mood-emoji {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .intensity-slider {
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        outline: none;
+        background: linear-gradient(to right, #fee2e2, #fbbf24, #10b981);
+    }
+    
+    .intensity-slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        cursor: pointer;
+        border: 3px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 400px;
+        background: white;
+        border-radius: 16px;
+        padding: 1rem;
+    }
+    
+    .mood-history-item {
+        border-left: 4px solid var(--primary-color);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: white;
+        border-radius: 0 12px 12px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .insights-card {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(34, 197, 94, 0.1));
+        border: 1px solid #10b981;
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-4">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="bi bi-emoji-smile text-warning me-2"></i>
+                    Mood Tracker
+                </h1>
+                <p class="lead text-muted">Track your emotional well-being over time</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Mood Entry Form -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        How are you feeling today?
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="moodForm">
+                        {% csrf_token %}
+                        
+                        <!-- Mood Selection -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Select Your Mood</label>
+                            <div class="row g-3">
+                                {% for value, label in form.mood.field.choices %}
+                                <div class="col-6 col-md-4">
+                                    <div class="mood-card card text-center p-3" data-mood="{{ value }}">
+                                        <div class="mood-emoji">
+                                            {% if 'very_happy' in value %}😄
+                                            {% elif 'happy' in value %}😊
+                                            {% elif 'neutral' in value %}😐
+                                            {% elif 'sad' in value %}😞
+                                            {% elif 'very_sad' in value %}😢
+                                            {% elif 'anxious' in value %}😰
+                                            {% elif 'stressed' in value %}😤
+                                            {% elif 'angry' in value %}😠
+                                            {% endif %}
+                                        </div>
+                                        <small class="fw-bold">{{ label|cut:"😄"|cut:"😊"|cut:"😐"|cut:"😞"|cut:"😢"|cut:"😰"|cut:"😤"|cut:"😠" }}</small>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {{ form.mood.as_hidden }}
+                        </div>
+                        
+                        <!-- Intensity Slider -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Intensity Level</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-3">Low</span>
+                                {{ form.intensity }}
+                                <span class="ms-3">High</span>
+                            </div>
+                            <div class="text-center mt-2">
+                                <span class="badge bg-primary" id="intensityDisplay">5/10</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Notes -->
+                        <div class="mb-4">
+                            {{ form.notes.label_tag }}
+                            {{ form.notes }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Save Mood Entry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mood Insights -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        Your Mood Insights
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="insights-card">
+                        <h5 class="text-success mb-3">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Personal Analysis
+                        </h5>
+                        <p class="mb-0">{{ mood_insights }}</p>
+                    </div>
+                    
+                    {% if mood_entries %}
+                    <div class="mt-4">
+                        <h6 class="fw-bold mb-3">Quick Stats</h6>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="text-center p-3 bg-light rounded-3">
+                                    <div class="h4 text-primary mb-1">{{ mood_entries|length }}</div>
+                                    <small class="text-muted">Entries</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 bg-light rounded-3">
+                                    <div class="h4 text-success mb-1">
+                                        {% with mood_entries|first as latest %}{{ latest.intensity }}/10{% endwith %}
+                                    </div>
+                                    <small class="text-muted">Latest</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4 text-center">
+                        <a href="#moodChart" class="btn btn-outline-success" onclick="scrollToChart()">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            View Mood Chart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mood Chart -->
+    {% if mood_entries %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Your Mood Over Time
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="moodChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Recent Mood History -->
+    {% if mood_entries %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Recent Mood History
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for entry in mood_entries|slice:":6" %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="mood-history-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="mood-emoji me-2" style="font-size: 2rem;">
+                                        {% if 'very_happy' in entry.mood %}😄
+                                        {% elif 'happy' in entry.mood %}😊
+                                        {% elif 'neutral' in entry.mood %}😐
+                                        {% elif 'sad' in entry.mood %}😞
+                                        {% elif 'very_sad' in entry.mood %}😢
+                                        {% elif 'anxious' in entry.mood %}😰
+                                        {% elif 'stressed' in entry.mood %}😤
+                                        {% elif 'angry' in entry.mood %}😠
+                                        {% endif %}
+                                    </span>
+                                    <div>
+                                        <div class="fw-bold">{{ entry.get_mood_display }}</div>
+                                        <small class="text-muted">{{ entry.created_at|date:"M j, Y H:i" }}</small>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">{{ entry.intensity }}/10 Intensity</span>
+                                </div>
+                                {% if entry.notes %}
+                                <p class="small text-muted mb-0">{{ entry.notes|truncatewords:20 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if mood_entries|length > 6 %}
+                    <div class="text-center mt-3">
+                        <a href="{% url 'conversation_history' %}" class="btn btn-outline-primary">
+                            View All History
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Call to Action -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 bg-primary text-white">
+                <div class="card-body text-center p-4">
+                    <h4 class="mb-3">Need Someone to Talk To?</h4>
+                    <p class="mb-4">Our AI companion is always here to listen and provide support.</p>
+                    <a href="{% url 'chat' %}" class="btn btn-light btn-lg">
+                        <i class="bi bi-chat-dots me-2"></i>
+                        Chat with Moodigo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mood selection functionality
+    document.querySelectorAll('.mood-card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove selected class from all cards
+            document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('selected'));
+            
+            // Add selected class to clicked card
+            this.classList.add('selected');
+            
+            // Set hidden input value
+            document.getElementById('id_mood').value = this.dataset.mood;
+        });
+    });
+    
+    // Intensity slider
+    const intensitySlider = document.getElementById('id_intensity');
+    const intensityDisplay = document.getElementById('intensityDisplay');
+    
+    function updateIntensityDisplay() {
+        const value = intensitySlider.value;
+        intensityDisplay.textContent = `${value}/10`;
+        
+        // Update slider color based on value
+        const percent = (value - 1) / 9 * 100;
+        intensitySlider.style.background = `linear-gradient(to right, #fee2e2 0%, #fbbf24 50%, #10b981 100%)`;
+    }
+    
+    intensitySlider.addEventListener('input', updateIntensityDisplay);
+    updateIntensityDisplay(); // Initial call
+    
+    // Form validation
+    document.getElementById('moodForm').addEventListener('submit', function(e) {
+        const selectedMood = document.getElementById('id_mood').value;
+        
+        if (!selectedMood) {
+            e.preventDefault();
+            showToast('Please select a mood before submitting.', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+        submitBtn.disabled = true;
+    });
+    
+    // Load mood chart if data exists
+    {% if mood_entries %}
+    async function loadMoodChart() {
+        try {
+            const response = await fetch('{% url "mood_chart_data" %}');
+            const data = await response.json();
+            
+            if (data.chart_data && data.chart_data.length > 0) {
+                createMoodChart(data.chart_data);
+            }
+        } catch (error) {
+            console.error('Error loading mood chart:', error);
+        }
+    }
+    
+    function createMoodChart(chartData) {
+        const ctx = document.getElementById('moodChart').getContext('2d');
+        
+        // Prepare data for chart
+        const labels = chartData.map(item => new Date(item.date).toLocaleDateString());
+        const intensityData = chartData.map(item => item.intensity);
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Mood Intensity',
+                    data: intensityData,
+                    borderColor: 'rgb(102, 126, 234)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: 'rgb(102, 126, 234)',
+                    pointBorderColor: 'white',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Your Mood Journey',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        title: {
+                            display: true,
+                            text: 'Intensity (1-10)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                elements: {
+                    point: {
+                        hoverRadius: 8
+                    }
+                }
+            }
+        });
+    }
+    
+    // Load chart on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadMoodChart();
+    });
+    
+    function scrollToChart() {
+        document.getElementById('moodChart').scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
+    {% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,395 @@
+<!-- templates/chatbot/assessment_result.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}Assessment Results - Moodigo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .risk-low {
+        background: linear-gradient(135deg, #10b981, #34d399);
+        color: white;
+    }
+    
+    .risk-moderate {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: white;
+    }
+    
+    .risk-high {
+        background: linear-gradient(135deg, #ef4444, #f87171);
+        color: white;
+    }
+    
+    .risk-very-high {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: white;
+    }
+    
+    .score-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 0 auto 2rem;
+        position: relative;
+    }
+    
+    .recommendation-item {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .action-button {
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .info-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+    }
+    
+    .crisis-banner {
+        background: linear-gradient(135deg, #fef2f2, #fee2e2);
+        border: 2px solid #fca5a5;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        animation: pulseRed 2s infinite;
+    }
+    
+    @keyframes pulseRed {
+        0%, 100% { border-color: #fca5a5; }
+        50% { border-color: #ef4444; }
+    }
+    
+    .progress-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .progress-ring-circle {
+        stroke-dasharray: 440;
+        stroke-dashoffset: 440;
+        transition: stroke-dashoffset 2s ease-in-out;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Crisis Banner (if very high risk) -->
+            {% if result.risk_level == 'Very High Risk' %}
+            <div class="crisis-banner">
+                <div class="text-center">
+                    <h3 class="text-danger fw-bold mb-3">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Immediate Support Recommended
+                    </h3>
+                    <p class="mb-4">
+                        Your assessment indicates you may be experiencing significant mental health challenges. 
+                        Please consider reaching out for professional support immediately.
+                    </p>
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <a href="tel:988" class="btn btn-danger btn-lg">
+                            <i class="bi bi-telephone-fill me-2"></i>
+                            Call 988 Now
+                        </a>
+                        <a href="{% url 'crisis_help' %}" class="btn btn-outline-danger btn-lg">
+                            <i class="bi bi-life-preserver me-2"></i>
+                            Crisis Resources
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Main Result Card -->
+            <div class="result-card 
+                {% if result.risk_level == 'Low Risk' %}risk-low
+                {% elif result.risk_level == 'Moderate Risk' %}risk-moderate
+                {% elif result.risk_level == 'High Risk' %}risk-high
+                {% else %}risk-very-high
+                {% endif %}">
+                
+                <div class="card-body text-center p-5">
+                    <h1 class="display-6 fw-bold mb-4">Your Assessment Results</h1>
+                    
+                    <!-- Score Circle -->
+                    <div class="score-circle">
+                        <svg class="progress-ring" viewBox="0 0 150 150">
+                            <circle class="progress-ring-circle" stroke="rgba(255,255,255,0.3)" 
+                                    stroke-width="8" fill="transparent" r="70" cx="75" cy="75"/>
+                            <circle class="progress-ring-circle" stroke="white" 
+                                    stroke-width="8" fill="transparent" r="70" cx="75" cy="75"
+                                    id="progressCircle"/>
+                        </svg>
+                        <div>{{ result.total_score }}</div>
+                    </div>
+                    
+                    <!-- Risk Level -->
+                    <h2 class="mb-4">{{ result.risk_level }}</h2>
+                    
+                    <!-- Info Grid -->
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="bi bi-clipboard-check" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2 mb-1">Assessment</h5>
+                            <small>Complete</small>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-graph-up" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2 mb-1">Score</h5>
+                            <small>{{ result.total_score }} / 40</small>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-calendar-event" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2 mb-1">Date</h5>
+                            <small>{{ assessment.created_at|date:"M j, Y" }}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-4">
+                        {% if result.risk_level == 'Low Risk' %}
+                        <p class="lead">
+                            Great news! Your responses indicate you're managing your mental health well. 
+                            Keep up the healthy habits and continue taking care of yourself.
+                        </p>
+                        {% elif result.risk_level == 'Moderate Risk' %}
+                        <p class="lead">
+                            Your responses suggest you may be experiencing some mental health challenges. 
+                            Consider speaking with a counselor or mental health professional.
+                        </p>
+                        {% elif result.risk_level == 'High Risk' %}
+                        <p class="lead">
+                            Your responses indicate significant mental health concerns. 
+                            We strongly recommend reaching out to a mental health professional for support.
+                        </p>
+                        {% else %}
+                        <p class="lead">
+                            Your responses suggest you may be experiencing severe mental health challenges. 
+                            Please seek immediate professional help.
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recommendations -->
+            <div class="mt-4">
+                <h3 class="mb-4">
+                    <i class="bi bi-lightbulb text-warning me-2"></i>
+                    Personalized Recommendations
+                </h3>
+                
+                {% for recommendation in result.recommendations %}
+                <div class="recommendation-item">
+                    <div class="d-flex align-items-start">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3 mt-1">
+                            <i class="bi bi-check-circle text-primary"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0">{{ recommendation }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="mt-5">
+                <h4 class="mb-4 text-center">What's Next?</h4>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{% url 'chat' %}" class="action-button btn btn-primary btn-lg">
+                        <i class="bi bi-chat-dots-fill"></i>
+                        Talk to Moodigo
+                    </a>
+                    
+                    <a href="{% url 'mood_tracker' %}" class="action-button btn btn-outline-primary btn-lg">
+                        <i class="bi bi-emoji-smile"></i>
+                        Track Your Mood
+                    </a>
+                    
+                    <a href="{% url 'resources' %}" class="action-button btn btn-outline-success btn-lg">
+                        <i class="bi bi-life-preserver"></i>
+                        Find Resources
+                    </a>
+                </div>
+                
+                {% if result.risk_level == 'High Risk' or result.risk_level == 'Very High Risk' %}
+                <div class="text-center mt-4">
+                    <a href="{% url 'crisis_help' %}" class="action-button btn btn-danger btn-lg">
+                        <i class="bi bi-telephone-fill"></i>
+                        Get Professional Help
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Additional Information -->
+            <div class="card border-0 mt-5">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle text-info me-2"></i>
+                        Understanding Your Results
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold">What This Means:</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="bi bi-dot text-primary"></i> This is a screening tool, not a diagnosis</li>
+                                <li><i class="bi bi-dot text-primary"></i> Results are based on your current responses</li>
+                                <li><i class="bi bi-dot text-primary"></i> Mental health can change over time</li>
+                                <li><i class="bi bi-dot text-primary"></i> Professional evaluation is recommended</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold">Remember:</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="bi bi-dot text-success"></i> You're not alone in this journey</li>
+                                <li><i class="bi bi-dot text-success"></i> Seeking help is a sign of strength</li>
+                                <li><i class="bi bi-dot text-success"></i> Mental health treatment is effective</li>
+                                <li><i class="bi bi-dot text-success"></i> There's hope for feeling better</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Privacy Notice -->
+            <div class="text-center mt-4 p-3 bg-light rounded-3">
+                <small class="text-muted">
+                    <i class="bi bi-shield-check me-1"></i>
+                    Your assessment results are private and stored securely. 
+                    Take the assessment again anytime to track your progress.
+                    <br>
+                    <a href="{% url 'assessment' %}" class="text-primary text-decoration-none mt-2 d-inline-block">
+                        <i class="bi bi-arrow-repeat me-1"></i>
+                        Retake Assessment
+                    </a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate the score circle
+        const circle = document.getElementById('progressCircle');
+        const score = {{ result.total_score }};
+        const maxScore = 40; // Maximum possible score
+        const percentage = (score / maxScore) * 100;
+        
+        // Calculate circumference
+        const radius = 70;
+        const circumference = 2 * Math.PI * radius;
+        
+        // Set initial state
+        circle.style.strokeDasharray = circumference;
+        circle.style.strokeDashoffset = circumference;
+        
+        // Animate
+        setTimeout(() => {
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }, 500);
+        
+        // Add entrance animations
+        const cards = document.querySelectorAll('.recommendation-item');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 1000 + (index * 200));
+        });
+        
+        // Action button hover effects
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Show completion message
+        showToast('Assessment completed successfully! Review your results below.', 'success');
+        
+        // Auto-scroll to results after a delay
+        setTimeout(() => {
+            document.querySelector('.result-card').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }, 1000);
+    });
+    
+    // Toast function (if not defined in base template)
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 5000);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,663 @@
+<!-- templates/chatbot/about.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}About Moodigo - Your AI Mental Health Companion{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-about {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        margin: 2rem 0;
+    }
+    
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .feature-card {
+        text-align: center;
+        padding: 2rem;
+        border: none;
+        border-radius: 16px;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin: 2rem 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .timeline-item:nth-child(odd) {
+        flex-direction: row-reverse;
+    }
+    
+    .timeline-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        width: 45%;
+        position: relative;
+    }
+    
+    .timeline-marker {
+        width: 20px;
+        height: 20px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 4px solid white;
+        box-shadow: 0 0 0 4px var(--primary-color);
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .team-member {
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .team-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 3rem;
+        color: white;
+    }
+    
+    .mission-card {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(34, 197, 94, 0.1));
+        border: 1px solid #10b981;
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        margin: 3rem 0;
+    }
+    
+    .vision-card {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.1));
+        border: 1px solid #3b82f6;
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        margin: 3rem 0;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-about {
+            padding: 2rem 1rem;
+        }
+        
+        .timeline::before {
+            left: 20px;
+        }
+        
+        .timeline-item {
+            flex-direction: column;
+            align-items: flex-start;
+            padding-left: 3rem;
+        }
+        
+        .timeline-content {
+            width: 100%;
+        }
+        
+        .timeline-marker {
+            left: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-about">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">
+                    About <span class="text-primary">Moodigo</span>
+                    <i class="bi bi-heart-pulse-fill text-danger ms-2"></i>
+                </h1>
+                <p class="lead mb-4">
+                    <strong>Moodigo</strong> is an AI-powered mental health chatbot built to support the 
+                    emotional well-being of university students. We understand the unique challenges of 
+                    academic life and we're here to help students navigate them through empathetic, 
+                    private, and accessible conversations.
+                </p>
+                <div class="d-flex justify-content-center align-items-center flex-wrap gap-4 mt-4">
+                    <div class="text-center">
+                        <div class="h3 text-primary mb-0">24/7</div>
+                        <small class="text-muted">Always Available</small>
+                    </div>
+                    <div class="text-center">
+                        <div class="h3 text-success mb-0">100%</div>
+                        <small class="text-muted">Private & Secure</small>
+                    </div>
+                    <div class="text-center">
+                        <div class="h3 text-info mb-0">AI</div>
+                        <small class="text-muted">Powered Support</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mission Statement -->
+    <div class="mission-card">
+        <h2 class="display-6 fw-bold text-success mb-4">Our Mission</h2>
+        <p class="lead mb-0">
+            "At Moodigo, our mission is to support the emotional well-being of university students 
+            through empathetic, AI-powered conversations. We strive to create a safe digital space 
+            where every student can feel heard, supported, and empowered to take control of their 
+            mental health journey."
+        </p>
+    </div>
+    
+    <!-- Vision Statement -->
+    <div class="vision-card">
+        <h2 class="display-6 fw-bold text-primary mb-4">Our Vision</h2>
+        <p class="lead mb-0">
+            To create a future where <strong>every student has access to instant, empathetic 
+            mental health support</strong> — no stigma, no waitlists, just support when you need it.
+        </p>
+    </div>
+    
+    <!-- Why Moodigo Exists -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="display-6 fw-bold text-center mb-5">Why Moodigo Exists</h2>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start">
+                        <div class="bg-warning bg-opacity-10 rounded-circle p-3 me-4">
+                            <i class="bi bi-exclamation-triangle text-warning" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-3">The Challenge</h4>
+                            <p class="text-muted mb-0">
+                                University life is exciting, but it can also be overwhelming. Many students 
+                                struggle silently with stress, anxiety, depression, and other mental health 
+                                challenges, often unable to access support or unsure where to begin.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start">
+                        <div class="bg-success bg-opacity-10 rounded-circle p-3 me-4">
+                            <i class="bi bi-lightbulb text-success" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-3">Our Solution</h4>
+                            <p class="text-muted mb-0">
+                                That's where Moodigo comes in — a friendly, intelligent chatbot designed to 
+                                listen without judgment, offer personalized strategies for emotional well-being, 
+                                and guide students to helpful resources when needed.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Core Values -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-6 fw-bold">Our Core Values</h2>
+            <p class="lead text-muted">The principles that guide everything we do</p>
+        </div>
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card card">
+                <div class="feature-icon bg-primary bg-opacity-10">
+                    <i class="bi bi-brain text-primary"></i>
+                </div>
+                <h4 class="fw-bold mb-3">🧠 Empathy First</h4>
+                <p class="text-muted">
+                    We prioritize emotional understanding in every response. Our AI is trained to 
+                    recognize and respond to emotional nuances with genuine care.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card card">
+                <div class="feature-icon bg-success bg-opacity-10">
+                    <i class="bi bi-shield-lock text-success"></i>
+                </div>
+                <h4 class="fw-bold mb-3">🔒 Privacy & Safety</h4>
+                <p class="text-muted">
+                    Conversations with Moodigo are confidential and secure. We use advanced 
+                    encryption to protect your privacy and never share personal information.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card card">
+                <div class="feature-icon bg-warning bg-opacity-10">
+                    <i class="bi bi-lightning text-warning"></i>
+                </div>
+                <h4 class="fw-bold mb-3">⚡ Always Accessible</h4>
+                <p class="text-muted">
+                    Help is available anytime, anywhere. Whether it's 3 AM during finals week 
+                    or a Sunday afternoon, Moodigo is always here to listen.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card card">
+                <div class="feature-icon bg-info bg-opacity-10">
+                    <i class="bi bi-tree text-info"></i>
+                </div>
+                <h4 class="fw-bold mb-3">🌱 Growth-Oriented</h4>
+                <p class="text-muted">
+                    We empower students to build mental resilience and develop healthy coping 
+                    strategies that will serve them throughout their academic journey and beyond.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How Moodigo Works -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-6 fw-bold">How Moodigo Works</h2>
+            <p class="lead text-muted">Simple steps to better mental health</p>
+        </div>
+    </div>
+    
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <div class="timeline-marker"></div>
+                <h4 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-chat-heart me-2"></i>
+                    1. Start a Conversation Anytime
+                </h4>
+                <p class="text-muted mb-0">
+                    Click the chat button, and Moodigo will greet you with a warm, non-judgmental tone. 
+                    Whether you're feeling anxious, stressed, lonely, or just need to vent — Moodigo is here.
+                </p>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <div class="timeline-marker"></div>
+                <h4 class="fw-bold text-success mb-3">
+                    <i class="bi bi-cpu me-2"></i>
+                    2. Real-Time Support
+                </h4>
+                <p class="text-muted mb-0">
+                    Moodigo uses AI and natural language understanding to respond thoughtfully. It will 
+                    ask how you're feeling, suggest calming techniques, share motivational quotes, 
+                    and help you reflect and reframe negative thoughts.
+                </p>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <div class="timeline-marker"></div>
+                <h4 class="fw-bold text-warning mb-3">
+                    <i class="bi bi-emoji-smile me-2"></i>
+                    3. Mood Tracking & Check-Ins
+                </h4>
+                <p class="text-muted mb-0">
+                    Moodigo can perform daily or weekly check-ins to track your emotional patterns. 
+                    You'll get visual insights and personalized tips for maintaining emotional balance.
+                </p>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <div class="timeline-marker"></div>
+                <h4 class="fw-bold text-info mb-3">
+                    <i class="bi bi-life-preserver me-2"></i>
+                    4. Resource Guidance
+                </h4>
+                <p class="text-muted mb-0">
+                    When needed, Moodigo will recommend university counseling services, mental health 
+                    hotlines, breathing and meditation apps, and crisis support resources.
+                </p>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <div class="timeline-marker"></div>
+                <h4 class="fw-bold text-secondary mb-3">
+                    <i class="bi bi-shield-check me-2"></i>
+                    5. Confidential & Secure
+                </h4>
+                <p class="text-muted mb-0">
+                    Your privacy matters. All chats with Moodigo are encrypted and confidential. 
+                    You can chat anonymously, without fear of judgment.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="display-6 fw-bold">Making a Difference</h2>
+            <p class="lead text-muted">Our impact on student mental health</p>
+        </div>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <h5 class="fw-bold mb-2">Always Available</h5>
+            <p class="text-muted mb-0">Round-the-clock emotional support</p>
+        </div>
+        
+        <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <h5 class="fw-bold mb-2">Private</h5>
+            <p class="text-muted mb-0">Confidential and secure conversations</p>
+        </div>
+        
+        <div class="stat-item">
+            <div class="stat-number">AI</div>
+            <h5 class="fw-bold mb-2">Powered</h5>
+            <p class="text-muted mb-0">Advanced machine learning technology</p>
+        </div>
+        
+        <div class="stat-item">
+            <div class="stat-number">∞</div>
+            <h5 class="fw-bold mb-2">Scalable</h5>
+            <p class="text-muted mb-0">Support unlimited students simultaneously</p>
+        </div>
+    </div>
+    
+    <!-- Technology Behind Moodigo -->
+    <div class="card border-0 mb-5">
+        <div class="card-body p-5">
+            <h2 class="display-6 fw-bold text-center mb-4">The Technology Behind Moodigo</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <h5 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-robot me-2"></i>
+                        Advanced AI Models
+                    </h5>
+                    <p class="text-muted">
+                        Moodigo uses state-of-the-art machine learning models trained specifically for 
+                        mental health support. Our models can detect emotional states, assess risk levels, 
+                        and provide appropriate responses based on established psychological principles.
+                    </p>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <h5 class="fw-bold text-success mb-3">
+                        <i class="bi bi-shield-shaded me-2"></i>
+                        Privacy by Design
+                    </h5>
+                    <p class="text-muted">
+                        We implement privacy-first architecture with end-to-end encryption, anonymous 
+                        sessions, and secure data handling. Your conversations are never stored in 
+                        identifiable ways and are protected by industry-standard security measures.
+                    </p>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <h5 class="fw-bold text-warning mb-3">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Continuous Learning
+                    </h5>
+                    <p class="text-muted">
+                        Our AI models continuously improve through anonymized interactions, ensuring 
+                        better support quality over time. We regularly update our knowledge base with 
+                        the latest mental health research and best practices.
+                    </p>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <h5 class="fw-bold text-info mb-3">
+                        <i class="bi bi-people me-2"></i>
+                        Human-Centered Design
+                    </h5>
+                    <p class="text-muted">
+                        Every feature is designed with real student needs in mind. We collaborate with 
+                        mental health professionals and conduct user research to ensure Moodigo provides 
+                        meaningful, helpful support.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Team Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-6 fw-bold">Meet the Team</h2>
+            <p class="lead text-muted">The people behind Moodigo</p>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-member">
+                <div class="team-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <h4 class="fw-bold">Kishor Kumar Thapa Kshetri</h4>
+                <p class="text-primary fw-bold">AI Developer & Researcher</p>
+                <p class="text-muted">
+                    Specializes in machine learning and natural language processing for mental health applications. 
+                    Passionate about using technology to make mental health support more accessible.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="card border-0 bg-primary text-white mb-5">
+        <div class="card-body text-center p-5">
+            <h2 class="display-6 fw-bold mb-4">Ready to Start Your Journey?</h2>
+            <p class="lead mb-4">
+                Whether you're having a tough day or just need someone to talk to, 
+                <strong>Moodigo is your digital companion</strong> for mental clarity and emotional strength.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="{% url 'chat' %}" class="btn btn-light btn-lg">
+                    <i class="bi bi-chat-dots-fill me-2"></i>
+                    Start Chatting Now
+                </a>
+                <a href="{% url 'mood_tracker' %}" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-emoji-smile me-2"></i>
+                    Track Your Mood
+                </a>
+                <a href="{% url 'assessment' %}" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-clipboard-check me-2"></i>
+                    Take Assessment
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Information -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <h3 class="fw-bold mb-4">Questions or Feedback?</h3>
+            <p class="lead text-muted mb-4">
+                We're always looking to improve Moodigo and would love to hear from you.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="{% url 'resources' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-life-preserver me-2"></i>
+                    Find Resources
+                </a>
+                <a href="{% url 'privacy' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-shield-check me-2"></i>
+                    Privacy Policy
+                </a>
+                <a href="{% url 'terms' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-file-text me-2"></i>
+                    Terms of Service
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animate stats on scroll
+    function animateStats() {
+        const stats = document.querySelectorAll('.stat-number');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'countUp 1s ease-out';
+                }
+            });
+        });
+        
+        stats.forEach(stat => {
+            observer.observe(stat);
+        });
+    }
+    
+    // Add count-up animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Animate timeline items
+    function animateTimeline() {
+        const timelineItems = document.querySelectorAll('.timeline-content');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideIn 0.6s ease-out forwards';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        timelineItems.forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(30px)';
+            observer.observe(item);
+        });
+    }
+    
+    // Add slide-in animation
+    const timelineStyle = document.createElement('style');
+    timelineStyle.textContent = `
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+    `;
+    document.head.appendChild(timelineStyle);
+    
+    // Initialize animations
+    document.addEventListener('DOMContentLoaded', function() {
+        animateStats();
+        animateTimeline();
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

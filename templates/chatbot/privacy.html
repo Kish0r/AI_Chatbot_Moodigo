@@ -1,0 +1,315 @@
+<!-- templates/chatbot/privacy.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}Privacy Policy - Moodigo{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="bi bi-shield-check text-success me-2"></i>
+                    Privacy Policy
+                </h1>
+                <p class="lead text-muted">Your privacy and confidentiality are our top priorities</p>
+                <small class="text-muted">Last updated: {{ "now"|date:"F j, Y" }}</small>
+            </div>
+            
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Important:</strong> Moodigo is designed with privacy-first principles. 
+                        We collect minimal data, use anonymous sessions, and prioritize your confidentiality above all else.
+                    </div>
+                    
+                    <h3 class="fw-bold mb-3">1. Information We Collect</h3>
+                    <h5>Automatically Collected Information:</h5>
+                    <ul>
+                        <li>Anonymous session identifiers (not linked to personal identity)</li>
+                        <li>Chat messages and mood entries (stored anonymously)</li>
+                        <li>Basic usage analytics (page views, feature usage)</li>
+                        <li>Technical information (browser type, device type for optimization)</li>
+                    </ul>
+                    
+                    <h5>Information You Provide:</h5>
+                    <ul>
+                        <li>Chat messages and conversations with Moodigo</li>
+                        <li>Mood tracker entries and notes</li>
+                        <li>Mental health assessment responses</li>
+                        <li>Optional preferences (preferred name, university - if provided)</li>
+                    </ul>
+                    
+                    <div class="alert alert-success mt-3">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <strong>We DO NOT collect:</strong> Real names, email addresses, phone numbers, 
+                        IP addresses, or any personally identifiable information unless you explicitly provide it.
+                    </div>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">2. How We Use Your Information</h3>
+                    <ul>
+                        <li><strong>Provide Support:</strong> To offer personalized mental health guidance and responses</li>
+                        <li><strong>Improve Service:</strong> To enhance Moodigo's AI models and user experience (using anonymized data)</li>
+                        <li><strong>Safety Monitoring:</strong> To detect crisis situations and provide appropriate resources</li>
+                        <li><strong>Analytics:</strong> To understand usage patterns and improve our services (aggregate data only)</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">3. Data Security</h3>
+                    <ul>
+                        <li><strong>Encryption:</strong> All data is encrypted in transit and at rest</li>
+                        <li><strong>Anonymous Storage:</strong> Personal conversations are not linked to identifiable information</li>
+                        <li><strong>Secure Servers:</strong> Data is stored on secure, monitored servers</li>
+                        <li><strong>Limited Access:</strong> Only authorized personnel can access anonymized data for service improvement</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">4. Information Sharing</h3>
+                    <p>We do not sell, rent, or share your personal information with third parties, except:</p>
+                    <ul>
+                        <li><strong>Legal Requirements:</strong> When required by law or to prevent harm</li>
+                        <li><strong>Emergency Situations:</strong> If there's an imminent threat to safety (following legal protocols)</li>
+                        <li><strong>Service Providers:</strong> With trusted partners who help us operate the service (under strict confidentiality agreements)</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">5. Your Rights</h3>
+                    <ul>
+                        <li><strong>Access:</strong> Request information about data we have (though most is anonymous)</li>
+                        <li><strong>Deletion:</strong> Request deletion of your data at any time</li>
+                        <li><strong>Correction:</strong> Update or correct any information</li>
+                        <li><strong>Portability:</strong> Request a copy of your data in a readable format</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">6. Data Retention</h3>
+                    <ul>
+                        <li>Chat conversations: Retained for 30 days, then anonymized for service improvement</li>
+                        <li>Mood data: Retained while you use the service, deleted upon request</li>
+                        <li>Assessment data: Retained for research purposes in anonymized form</li>
+                        <li>Usage analytics: Retained in aggregate form indefinitely</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">7. Cookies and Tracking</h3>
+                    <p>We use minimal cookies and tracking technologies:</p>
+                    <ul>
+                        <li><strong>Session Cookies:</strong> To maintain your chat session (essential for service)</li>
+                        <li><strong>Preference Cookies:</strong> To remember your settings and preferences</li>
+                        <li><strong>Analytics:</strong> Basic usage analytics to improve our service (anonymized)</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">8. Third-Party Services</h3>
+                    <p>Moodigo may integrate with:</p>
+                    <ul>
+                        <li>Crisis hotlines and mental health resources (links only)</li>
+                        <li>Analytics services (with anonymized data)</li>
+                        <li>Cloud hosting providers (with encryption and security agreements)</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">9. Age Requirements</h3>
+                    <p>
+                        Moodigo is intended for users 13 years and older. If you are under 18, 
+                        please consider involving a parent, guardian, or trusted adult in your mental health journey.
+                    </p>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">10. Changes to Privacy Policy</h3>
+                    <p>
+                        We may update this policy occasionally. Significant changes will be communicated 
+                        through the platform. Continued use constitutes acceptance of updated terms.
+                    </p>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">11. Contact Us</h3>
+                    <p>
+                        Questions about privacy? We're here to help. While we don't have a traditional 
+                        contact form, you can discuss privacy concerns with Moodigo directly in the chat interface.
+                    </p>
+                    
+                    <div class="alert alert-primary mt-4">
+                        <h5 class="fw-bold mb-2">
+                            <i class="bi bi-heart-pulse me-2"></i>
+                            Our Commitment to You
+                        </h5>
+                        <p class="mb-0">
+                            Your mental health journey is deeply personal. We're committed to protecting your privacy 
+                            while providing the support you need. Your trust is essential to our mission of helping 
+                            students achieve better mental health.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- templates/chatbot/terms.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}Terms of Service - Moodigo{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="bi bi-file-text text-primary me-2"></i>
+                    Terms of Service
+                </h1>
+                <p class="lead text-muted">Terms and conditions for using Moodigo</p>
+                <small class="text-muted">Last updated: {{ "now"|date:"F j, Y" }}</small>
+            </div>
+            
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Important:</strong> Moodigo is a supportive tool and is not a substitute for 
+                        professional medical care, therapy, or emergency services.
+                    </div>
+                    
+                    <h3 class="fw-bold mb-3">1. Acceptance of Terms</h3>
+                    <p>
+                        By accessing and using Moodigo, you accept and agree to be bound by the terms 
+                        and provision of this agreement. If you do not agree to these terms, please do not use the service.
+                    </p>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">2. Description of Service</h3>
+                    <p>Moodigo is an AI-powered mental health support chatbot that provides:</p>
+                    <ul>
+                        <li>Conversational emotional support and guidance</li>
+                        <li>Mood tracking and insights</li>
+                        <li>Mental health assessments and resources</li>
+                        <li>Connection to professional mental health resources</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">3. Medical Disclaimer</h3>
+                    <div class="alert alert-danger">
+                        <h5 class="fw-bold mb-2">IMPORTANT MEDICAL DISCLAIMER</h5>
+                        <ul class="mb-0">
+                            <li>Moodigo is <strong>NOT</strong> a replacement for professional medical care</li>
+                            <li>Moodigo cannot diagnose mental health conditions</li>
+                            <li>Moodigo cannot prescribe medications or provide medical treatment</li>
+                            <li>In crisis situations, please contact emergency services (911) or crisis hotlines (988)</li>
+                            <li>Always consult with qualified healthcare professionals for medical advice</li>
+                        </ul>
+                    </div>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">4. User Responsibilities</h3>
+                    <h5>You agree to:</h5>
+                    <ul>
+                        <li>Use Moodigo responsibly and for its intended purpose</li>
+                        <li>Provide honest information to receive the most helpful support</li>
+                        <li>Seek professional help when recommended or needed</li>
+                        <li>Not misuse the service or attempt to harm its operation</li>
+                        <li>Respect the privacy and confidentiality of the service</li>
+                    </ul>
+                    
+                    <h5>You agree NOT to:</h5>
+                    <ul>
+                        <li>Use Moodigo to harm yourself or others</li>
+                        <li>Share inappropriate, harmful, or illegal content</li>
+                        <li>Attempt to reverse-engineer or hack the service</li>
+                        <li>Use the service for commercial purposes without permission</li>
+                        <li>Violate any applicable laws or regulations</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">5. Age Requirements</h3>
+                    <ul>
+                        <li>Users must be 13 years or older to use Moodigo</li>
+                        <li>Users under 18 are encouraged to involve parents/guardians in their mental health care</li>
+                        <li>In crisis situations involving minors, appropriate authorities may be contacted</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">6. Crisis Situations</h3>
+                    <p>In situations involving:</p>
+                    <ul>
+                        <li>Imminent danger to self or others</li>
+                        <li>Suicidal or homicidal ideation</li>
+                        <li>Child abuse or neglect</li>
+                        <li>Other emergency situations</li>
+                    </ul>
+                    <p>
+                        Moodigo will provide crisis resources and may recommend contacting emergency services. 
+                        We may be required to report certain situations to appropriate authorities as required by law.
+                    </p>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">7. Intellectual Property</h3>
+                    <ul>
+                        <li>Moodigo and its content are protected by copyright and other intellectual property laws</li>
+                        <li>You may not copy, distribute, or create derivative works without permission</li>
+                        <li>You retain rights to your personal information and communications</li>
+                        <li>By using Moodigo, you grant us permission to use anonymized data to improve our services</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">8. Limitation of Liability</h3>
+                    <div class="alert alert-info">
+                        <p class="mb-0">
+                            To the maximum extent permitted by law, Moodigo and its creators shall not be liable 
+                            for any indirect, incidental, special, consequential, or punitive damages, including 
+                            but not limited to loss of profits, data, or other intangible losses resulting from 
+                            your use of the service.
+                        </p>
+                    </div>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">9. Service Availability</h3>
+                    <ul>
+                        <li>We strive to keep Moodigo available 24/7 but cannot guarantee uninterrupted service</li>
+                        <li>Maintenance, updates, or technical issues may temporarily affect availability</li>
+                        <li>We reserve the right to modify or discontinue features with notice</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">10. Termination</h3>
+                    <p>Either party may terminate use of Moodigo at any time:</p>
+                    <ul>
+                        <li>You may stop using Moodigo at any time</li>
+                        <li>We may terminate or suspend access for violations of these terms</li>
+                        <li>Upon termination, these terms remain in effect for applicable provisions</li>
+                    </ul>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">11. Changes to Terms</h3>
+                    <p>
+                        We reserve the right to modify these terms at any time. Significant changes will be 
+                        communicated through the platform. Continued use after changes constitutes acceptance.
+                    </p>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">12. Governing Law</h3>
+                    <p>
+                        These terms are governed by applicable local laws. Any disputes will be resolved 
+                        through appropriate legal channels in the jurisdiction where Moodigo operates.
+                    </p>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">13. Severability</h3>
+                    <p>
+                        If any provision of these terms is found unenforceable, the remaining provisions 
+                        will remain in full force and effect.
+                    </p>
+                    
+                    <h3 class="fw-bold mb-3 mt-4">14. Contact Information</h3>
+                    <p>
+                        For questions about these terms, you can discuss them with Moodigo directly 
+                        through the chat interface or refer to our support resources.
+                    </p>
+                    
+                    <div class="alert alert-success mt-4">
+                        <h5 class="fw-bold mb-2">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Our Promise
+                        </h5>
+                        <p class="mb-0">
+                            These terms exist to protect both you and our service. Our primary goal is to provide 
+                            safe, helpful, and supportive mental health resources. We're committed to transparency, 
+                            user safety, and the highest standards of care within the scope of our AI-powered platform.
+                        </p>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <p class="text-muted mb-3">By using Moodigo, you acknowledge that you have read and agree to these terms.</p>
+                        <a href="{% url 'chat' %}" class="btn btn-primary">
+                            <i class="bi bi-chat-dots me-2"></i>
+                            Start Using Moodigo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

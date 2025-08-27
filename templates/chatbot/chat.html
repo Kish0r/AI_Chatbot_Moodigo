@@ -1,0 +1,578 @@
+<!-- templates/chatbot/chat.html -->
+{% extends 'chatbot/base.html' %}
+
+{% block title %}Chat with Moodigo - Your Mental Health Companion{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-main {
+        height: calc(100vh - 200px);
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .chat-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1rem;
+        border-radius: 16px 16px 0 0;
+        text-align: center;
+    }
+    
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        background: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .chat-input-area {
+        padding: 1rem;
+        border-top: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 0 0 16px 16px;
+    }
+    
+    .message {
+        display: flex;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.3s ease;
+    }
+    
+    .message.user {
+        justify-content: flex-end;
+    }
+    
+    .message.bot {
+        justify-content: flex-start;
+    }
+    
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 0.5rem;
+        flex-shrink: 0;
+    }
+    
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        order: 2;
+    }
+    
+    .message.bot .message-avatar {
+        background: #10b981;
+        color: white;
+    }
+    
+    .message-content {
+        max-width: 70%;
+        padding: 0.75rem 1rem;
+        border-radius: 18px;
+        position: relative;
+        word-wrap: break-word;
+    }
+    
+    .message.user .message-content {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+    
+    .message.bot .message-content {
+        background: white;
+        border: 1px solid #e2e8f0;
+        color: #1f2937;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .message-time {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        margin-top: 0.25rem;
+    }
+    
+    .message.user .message-time {
+        text-align: right;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .message.bot .message-time {
+        color: #6b7280;
+    }
+    
+    .typing-indicator {
+        display: none;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 12px;
+        margin: 0.5rem 0;
+    }
+    
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+        margin-left: 0.5rem;
+    }
+    
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+        animation: typingDots 1.5s infinite;
+    }
+    
+    .typing-dot:nth-child(2) { animation-delay: 0.5s; }
+    .typing-dot:nth-child(3) { animation-delay: 1s; }
+    
+    @keyframes typingDots {
+        0%, 60%, 100% { opacity: 0.3; }
+        30% { opacity: 1; }
+    }
+    
+    .crisis-detected {
+        background: linear-gradient(135deg, #fef2f2, #fce7e7);
+        border: 2px solid #fca5a5;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1rem 0;
+        animation: pulseAlert 2s infinite;
+    }
+    
+    @keyframes pulseAlert {
+        0%, 100% { border-color: #fca5a5; }
+        50% { border-color: #ef4444; }
+    }
+    
+    .prediction-info {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid #93c5fd;
+        border-radius: 8px;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .chat-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    
+    .suggestion-chip {
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .suggestion-chip:hover {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    #messageInput {
+        border-radius: 25px;
+        border: 2px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    #messageInput:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .send-button {
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .welcome-message {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(34, 197, 94, 0.1));
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+        .chat-main {
+            height: calc(100vh - 120px);
+        }
+        
+        .message-content {
+            max-width: 85%;
+        }
+        
+        .chat-suggestions {
+            flex-direction: column;
+        }
+        
+        .suggestion-chip {
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-lg chat-main">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-2 me-3">
+                            <i class="bi bi-robot" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">Moodigo</h4>
+                            <small class="opacity-75">Your AI Mental Health Companion</small>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-light btn-sm rounded-pill" onclick="startNewConversation()">
+                            <i class="bi bi-plus-circle me-1"></i> New Chat
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                {% if not messages %}
+                    <!-- Welcome Message -->
+                    <div class="welcome-message">
+                        <div class="mb-3">
+                            <i class="bi bi-heart-pulse-fill text-success" style="font-size: 3rem;"></i>
+                        </div>
+                        <h3 class="fw-bold text-success mb-3">Welcome to Moodigo! 👋</h3>
+                        <p class="lead mb-4">
+                            I'm here to listen and support you through whatever you're going through. 
+                            Whether you're feeling stressed, anxious, happy, or just need someone to talk to, 
+                            I'm here 24/7.
+                        </p>
+                        <div class="chat-suggestions" id="initialSuggestions">
+                            <div class="suggestion-chip" onclick="sendSuggestion('I\'m feeling really stressed about my exams')">
+                                😰 I'm feeling stressed about exams
+                            </div>
+                            <div class="suggestion-chip" onclick="sendSuggestion('I\'ve been feeling down lately')">
+                                😔 I've been feeling down lately
+                            </div>
+                            <div class="suggestion-chip" onclick="sendSuggestion('I\'m having trouble sleeping')">
+                                😴 I'm having trouble sleeping
+                            </div>
+                            <div class="suggestion-chip" onclick="sendSuggestion('I need some motivation today')">
+                                💪 I need some motivation
+                            </div>
+                            <div class="suggestion-chip" onclick="sendSuggestion('How can I manage my anxiety?')">
+                                🧘 Help with anxiety
+                            </div>
+                            <div class="suggestion-chip" onclick="sendSuggestion('I\'m feeling overwhelmed with everything')">
+                                🌊 Feeling overwhelmed
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Existing Messages -->
+                    {% for message in messages %}
+                        <div class="message {{ message.sender }}">
+                            <div class="message-avatar">
+                                {% if message.sender == 'user' %}
+                                    <i class="bi bi-person-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-robot"></i>
+                                {% endif %}
+                            </div>
+                            <div class="message-content">
+                                {{ message.content|linebreaks }}
+                                {% if message.predicted_condition and message.sender == 'bot' %}
+                                    <div class="prediction-info">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Detected: {{ message.predicted_condition }} 
+                                        ({{ message.confidence_score|floatformat:0 }}% confidence)
+                                    </div>
+                                {% endif %}
+                                <div class="message-time">
+                                    {{ message.timestamp|date:"H:i" }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="message-avatar">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="me-2">Moodigo is typing</span>
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="chat-input-area">
+                <form id="chatForm" onsubmit="sendMessage(event)">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="messageInput" 
+                            placeholder="Type your message here... How are you feeling today?"
+                            autocomplete="off"
+                            maxlength="500"
+                        >
+                        <button class="btn btn-primary send-button" type="submit" id="sendButton">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Your conversation is private and secure
+                        </small>
+                        <small class="text-muted" id="charCount">0/500</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Crisis Help Alert (Hidden by default) -->
+        <div class="crisis-detected d-none" id="crisisAlert">
+            <div class="d-flex align-items-start">
+                <i class="bi bi-exclamation-triangle-fill text-danger me-3 mt-1" style="font-size: 1.5rem;"></i>
+                <div class="flex-grow-1">
+                    <h5 class="text-danger fw-bold mb-2">We're Concerned About You</h5>
+                    <p class="mb-3">
+                        I've detected that you might be going through a crisis. Please remember that you're not alone, 
+                        and there are people who want to help.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{% url 'crisis_help' %}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-telephone-fill me-1"></i>
+                            Get Crisis Help
+                        </a>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="dismissCrisisAlert()">
+                            <i class="bi bi-x-circle me-1"></i>
+                            I'm Safe
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const chatMessages = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const crisisAlert = document.getElementById('crisisAlert');
+    const charCount = document.getElementById('charCount');
+    const sendButton = document.getElementById('sendButton');
+    
+    // Auto-scroll to bottom
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Character counter
+    messageInput.addEventListener('input', function() {
+        const length = this.value.length;
+        charCount.textContent = `${length}/500`;
+        
+        if (length > 450) {
+            charCount.classList.add('text-warning');
+        } else {
+            charCount.classList.remove('text-warning');
+        }
+    });
+    
+    // Send message function
+    async function sendMessage(event) {
+        event.preventDefault();
+        
+        const message = messageInput.value.trim();
+        if (!message) return;
+        
+        // Disable input and show loading
+        messageInput.disabled = true;
+        sendButton.disabled = true;
+        sendButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        
+        // Add user message to chat
+        addMessage('user', message);
+        
+        // Clear input
+        messageInput.value = '';
+        charCount.textContent = '0/500';
+        
+        // Show typing indicator
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+        
+        try {
+            const response = await fetch('{% url "send_message" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({ message: message })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Hide typing indicator
+                typingIndicator.style.display = 'none';
+                
+                // Add bot response
+                addMessage('bot', data.bot_response, {
+                    prediction: data.prediction,
+                    confidence: data.confidence,
+                    timestamp: data.timestamp
+                });
+                
+                // Show crisis alert if needed
+                if (data.is_crisis) {
+                    showCrisisAlert();
+                }
+                
+            } else {
+                throw new Error(data.error || 'Failed to send message');
+            }
+            
+        } catch (error) {
+            typingIndicator.style.display = 'none';
+            addMessage('bot', 'I apologize, but I\'m having trouble responding right now. Please try again in a moment.');
+            console.error('Error:', error);
+            showToast('Failed to send message. Please try again.', 'error');
+        } finally {
+            // Re-enable input
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="bi bi-send-fill"></i>';
+            messageInput.focus();
+        }
+    }
+    
+    // Add message to chat
+    function addMessage(sender, content, metadata = {}) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'message-avatar';
+        avatarDiv.innerHTML = sender === 'user' ? '<i class="bi bi-person-fill"></i>' : '<i class="bi bi-robot"></i>';
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        contentDiv.innerHTML = content.replace(/\n/g, '<br>');
+        
+        // Add prediction info for bot messages
+        if (sender === 'bot' && metadata.prediction) {
+            const predictionDiv = document.createElement('div');
+            predictionDiv.className = 'prediction-info';
+            predictionDiv.innerHTML = `
+                <i class="bi bi-info-circle me-1"></i>
+                Detected: ${metadata.prediction} (${Math.round(metadata.confidence * 100)}% confidence)
+            `;
+            contentDiv.appendChild(predictionDiv);
+        }
+        
+        // Add timestamp
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'message-time';
+        timeDiv.textContent = metadata.timestamp || new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        contentDiv.appendChild(timeDiv);
+        
+        messageDiv.appendChild(avatarDiv);
+        messageDiv.appendChild(contentDiv);
+        
+        // Hide initial suggestions
+        const initialSuggestions = document.getElementById('initialSuggestions');
+        if (initialSuggestions) {
+            initialSuggestions.style.display = 'none';
+        }
+        
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    // Send suggestion
+    function sendSuggestion(suggestion) {
+        messageInput.value = suggestion;
+        sendMessage(new Event('submit'));
+    }
+    
+    // Show crisis alert
+    function showCrisisAlert() {
+        crisisAlert.classList.remove('d-none');
+        crisisAlert.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Dismiss crisis alert
+    function dismissCrisisAlert() {
+        crisisAlert.classList.add('d-none');
+    }
+    
+    // Start new conversation
+    async function startNewConversation() {
+        if (confirm('Are you sure you want to start a new conversation? This will end the current chat.')) {
+            window.location.href = '{% url "new_conversation" %}';
+        }
+    }
+    
+    // Auto-focus input
+    messageInput.focus();
+    
+    // Scroll to bottom on load
+    scrollToBottom();
+    
+    // Handle Enter key
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage(e);
+        }
+    });
+    
+    // Auto-resize textarea effect
+    messageInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+</script>
+{% endblock %}
