@@ -1,11 +1,13 @@
-Ai - powered chatbot 
 This AI-powered chatbot project is fully runnable. To get started:
 
-Clone the repository to your local machine.
+1. Clone the repository to your local machine.
 
-Start the development server using:
-python manage.py runserver
+2. Install dependencies from the requirements.txt file:
+   pip install -r requirements.txt
 
-Open your browser at: http://127.0.0.1:8000/
+3. Start the development server using:
+   python manage.py runserver
 
-To stop the server, press CTRL + BREAK.
+4. Open your browser at: http://127.0.0.1:8000/
+
+5. To stop the server, press CTRL + BREAK.
